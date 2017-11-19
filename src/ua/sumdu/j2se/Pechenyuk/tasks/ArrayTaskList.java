@@ -5,110 +5,90 @@ package ua.sumdu.j2se.Pechenyuk.tasks;
  * @version 1.01 15 Oct 2
  * @author Sergey Pechenyuk
  */
-public class ArrayTaskList {
+public class ArrayTaskList extends TaskList {
 
-    private Task[] arrTask = new Task[0];
+    private final int INIT_SIZE = 16;
+    private final float CUT_RATE = 1.2f;
+    //private int pointer = 0;
 
-    
+    //private Task[] arrTask = new Task[INIT_SIZE];
+
     public static void main(String[] args) {
 
         Task one = new Task("Repeat left intersect IN 1", 0, 55, 13);
         Task two = new Task("Repeat left intersect IN 2", 0, 60, 30);
         Task thr = new Task("Repeat right intersect IN", 55, 100, 20);
         Task four = new Task("Simple bound IN", 60);
-        Task five = new Task("four", 7, 10, 1);
-        one.active = true;
-        two.active = true;
-        thr.active = true;
-        four.active = true;
-        five.active = true;
-        ArrayTaskList temp = new ArrayTaskList();
+        Task five = new Task("Simple OUT", 10);
+        //Task five = new Task("four", 1, 20, 1);
+
+        one.setActive(true);
+        two.setActive(true);
+        thr.setActive(true);
+        four.setActive(true);
+        five.setActive(true);
+
+        TaskList temp = new ArrayTaskList();
         temp.add(one);
         temp.add(two);
         temp.add(thr);
         temp.add(four);
         temp.add(five);
+
         temp = temp.incoming(50, 60);
 
         for (int i = 0; i < temp.size(); i++) {
             if (temp.getTask(i) != null) {
                 System.out.println("title -" + temp.getTask(i).getTitle() + " - " + i);
+            } else {
+                break;
             }
         }
-        int n = (6^2)+(6|2);
-        System.out.println(n);
+     }
 
+    //Возвращает элемент списка по индексу.
+    public Task get(int index) {
+        return (Task) arrTask[index];
     }
-    
+
 
     public void add(Task task) {
-        if (task.equals(null)) {
-            throw new NullPointerException("task is not be null");
+        if(pointer == arrTask.length-1) {
+            Task[] newArrTask = new Task[(int)(arrTask.length * CUT_RATE)];
+            System.arraycopy(arrTask, 0, newArrTask, 0, pointer);
+            arrTask = newArrTask;
         }
-        Task[] newArrTask = new Task[arrTask.length + 1];
-        for (int i = 0; i < arrTask.length; i++) {    //copy array
-            newArrTask[i] = arrTask[i];
-        }
- 
-        newArrTask[arrTask.length] = task;          //add new task
-        arrTask = newArrTask;
+        arrTask[pointer] = task;
+        pointer++;
     }
+
 
     public boolean remove(Task task) {
         boolean removed = false;
+        int index = 0;                              //index of the task to be delete
         //search for the index of the element to be deleted
-        int j = 0;                                    //index of the task to be delete
-        for (int i = 0; i < arrTask.length; i++) {
-            if (!removed) {                          //not yet deleted
-                if (arrTask[i].equals(task)) {        //looking for the first match
-                    j = i;                            
-                    removed = true;                 //will be deleted
-                }
+        for (int i = 0; i < pointer; i++) {
+            if (arrTask[i].equals(task)) {        //looking for the first match
+                index = i;
+                removed = true;
+                break;
             }
         }
-        //deleted of the element
-        int k = 0;
+
         if (removed) {
-            Task[] newArrTask = new Task[arrTask.length - 1];
-            for (int i = 0; i < arrTask.length; i++) {
-                if (i != j) {
-                    newArrTask[k] = arrTask[i];
-                    k++;
-                }
+            for (int i = index; i < pointer; i++) {
+                arrTask[i] = arrTask[i + 1];
             }
-            arrTask = newArrTask;
+            arrTask[pointer] = null;
+            pointer--;
+
+            if (arrTask.length > INIT_SIZE && pointer < arrTask.length / CUT_RATE) {
+                Task[] newArrTask = new Task[(int) (arrTask.length / CUT_RATE)];
+                System.arraycopy(arrTask, 0, newArrTask, 0, pointer);
+                arrTask = newArrTask;   // если элементов в CUT_RATE раз меньше чем
+                                        // длина массива, то уменьшу
+            }
         }
         return removed;
-    }
-
-    public int size() {
-        return arrTask.length;
-    }
-
-    public Task getTask(int index) {
-        return arrTask[index];
-    }
-
-
-    public ArrayTaskList incoming(int from, int to) {
-        ArrayTaskList incomArrTaskList = new ArrayTaskList();
-
-        for (int i = 0; i < arrTask.length; i++) {
-            if (arrTask[i].active) {
-                if (arrTask[i].repeated) {                          //repeated tasks
-                    if (arrTask[i].nextTimeAfter(from) != -1) {     //time after from is not absent
-                        if (arrTask[i].nextTimeAfter(from) <=  to) {
-                            incomArrTaskList.add(arrTask[i]);
-                        }
-                    }
-                } else {                                                  //not repeated tasks
-                    if ((arrTask[i].time > from) && (arrTask[i].time <= to)) {
-                        incomArrTaskList.add(arrTask[i]);
-                    }
-
-                }
-            }
-        }
-        return incomArrTaskList;
     }
 }

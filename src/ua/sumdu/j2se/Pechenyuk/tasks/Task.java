@@ -7,13 +7,13 @@ package ua.sumdu.j2se.Pechenyuk.tasks;
  */
 
 public class Task {
-    String title;
-    int time;
-    int start;
-    int end;
-    int interval;
-    boolean active;
-    boolean repeated;
+    private String title;
+    private int time;
+    private int start;
+    private int end;
+    private int interval;
+    private boolean active;
+    private boolean repeated;
 
     public Task(String title, int time) {
         this.setTime(time);
