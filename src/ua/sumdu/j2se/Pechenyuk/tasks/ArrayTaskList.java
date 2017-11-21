@@ -7,44 +7,44 @@ package ua.sumdu.j2se.Pechenyuk.tasks;
  */
 public class ArrayTaskList extends TaskList {
 
-    private final int INIT_SIZE = 16;
-    private final float CUT_RATE = 1.2f;
+    //private final int INIT_SIZE = 16;
+    //private final float CUT_RATE = 1.2f;
     //private int pointer = 0;
 
     //private Task[] arrTask = new Task[INIT_SIZE];
 
     public static void main(String[] args) {
 
-        Task one = new Task("Repeat left intersect IN 1", 0, 55, 13);
-        Task two = new Task("Repeat left intersect IN 2", 0, 60, 30);
-        Task thr = new Task("Repeat right intersect IN", 55, 100, 20);
-        Task four = new Task("Simple bound IN", 60);
-        Task five = new Task("Simple OUT", 10);
-        //Task five = new Task("four", 1, 20, 1);
+    Task one = new Task("Repeat left intersect IN 1", 0, 55, 13);
+    Task two = new Task("Repeat left intersect IN 2", 0, 60, 30);
+    Task thr = new Task("Repeat right intersect IN", 55, 100, 20);
+    Task four = new Task("Simple bound IN", 60);
+    Task five = new Task("Simple OUT", 10);
+    //Task five = new Task("four", 1, 20, 1);
 
-        one.setActive(true);
-        two.setActive(true);
-        thr.setActive(true);
-        four.setActive(true);
-        five.setActive(true);
+    one.setActive(true);
+    two.setActive(true);
+    thr.setActive(true);
+    four.setActive(true);
+    five.setActive(true);
 
-        TaskList temp = new ArrayTaskList();
-        temp.add(one);
-        temp.add(two);
-        temp.add(thr);
-        temp.add(four);
-        temp.add(five);
+    TaskList temp = new ArrayTaskList();
+    temp.add(one);
+    temp.add(two);
+    temp.add(thr);
+    temp.add(four);
+    temp.add(five);
 
-        temp = temp.incoming(50, 60);
+    temp = temp.incoming(50, 60);
 
-        for (int i = 0; i < temp.size(); i++) {
-            if (temp.getTask(i) != null) {
-                System.out.println("title -" + temp.getTask(i).getTitle() + " - " + i);
-            } else {
-                break;
-            }
+    for (int i = 0; i < temp.size(); i++) {
+        if (temp.getTask(i) != null) {
+            System.out.println("title -" + temp.getTask(i).getTitle() + " - " + i);
+        } else {
+            break;
         }
-     }
+    }
+}
 
     //Возвращает элемент списка по индексу.
     public Task get(int index) {
@@ -54,9 +54,7 @@ public class ArrayTaskList extends TaskList {
 
     public void add(Task task) {
         if(pointer == arrTask.length-1) {
-            Task[] newArrTask = new Task[(int)(arrTask.length * CUT_RATE)];
-            System.arraycopy(arrTask, 0, newArrTask, 0, pointer);
-            arrTask = newArrTask;
+            resize ((int) (arrTask.length / CUT_RATE));
         }
         arrTask[pointer] = task;
         pointer++;
@@ -86,7 +84,7 @@ public class ArrayTaskList extends TaskList {
                 Task[] newArrTask = new Task[(int) (arrTask.length / CUT_RATE)];
                 System.arraycopy(arrTask, 0, newArrTask, 0, pointer);
                 arrTask = newArrTask;   // если элементов в CUT_RATE раз меньше чем
-                                        // длина массива, то уменьшу
+                // длина массива, то уменьшу
             }
         }
         return removed;

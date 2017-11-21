@@ -35,13 +35,17 @@ public abstract class TaskList {
             }
         }
         if (incomTaskList.length > INIT_SIZE && j < incomTaskList.length / CUT_RATE) {
-            Task[] newArrTask = new Task[(int) (incomTaskList.length / CUT_RATE)];
-            System.arraycopy(incomTaskList, 0, newArrTask, 0, j);
-            incomTaskList = newArrTask;     // если элементов в CUT_RATE раз меньше чем
-                                            // длина массива, то уменьшу
-        }
+            resize ((int) (incomTaskList.length / CUT_RATE));
+         }
         pointer = j;
         arrTask = incomTaskList;
         return this;
+    }
+
+    void resize(int newLength) {
+        Task[] newArray = new Task[newLength];
+        System.arraycopy(arrTask, 0, newArray, 0, pointer);
+        arrTask = newArray;      // если элементов в CUT_RATE раз меньше чем
+                                // длина массива, то уменьшу
     }
 }
