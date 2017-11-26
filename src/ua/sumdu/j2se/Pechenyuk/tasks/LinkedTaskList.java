@@ -1,80 +1,161 @@
 package ua.sumdu.j2se.Pechenyuk.tasks;
+
 /**
  * Created by veld on 31.10.2017.
  */
 public class LinkedTaskList extends TaskList{
-    public static void main(String[] args) {
 
-        Task one = new Task("Repeat left intersect IN 1", 0, 55, 13);
-        Task two = new Task("Repeat left intersect IN 2", 0, 60, 30);
-        Task thr = new Task("Repeat right intersect IN", 55, 100, 20);
-        Task four = new Task("Simple bound IN", 60);
-        Task five = new Task("Simple OUT", 10);
-        //Task five = new Task("four", 1, 20, 1);
+    private TaskNode header;
 
-        one.setActive(true);
-        two.setActive(true);
-        thr.setActive(true);
-        four.setActive(true);
-        five.setActive(true);
+    private int size = 0;
 
-        TaskList temp = new ArrayTaskList();
-        temp.add(one);
-        temp.add(two);
-        temp.add(thr);
-        temp.add(four);
-        temp.add(five);
+    //Constractor
+    public LinkedTaskList( ) {
+        header = new TaskNode( null );
+    }
 
-        temp = temp.incoming(50, 60);
+    public int size() {
+        return size;
+    }
 
-        for (int i = 0; i < temp.size(); i++) {
-            if (temp.getTask(i) != null) {
-                System.out.println("title -" + temp.getTask(i).getTitle() + " - " + i);
-            } else {
-                break;
-            }
+    //is null
+    public boolean isEmpty( ) {
+        return header.next == null;
+    }
+
+    public LinkedListTaskItr first( ) {
+        return new LinkedListTaskItr( header.next );
+    }
+
+    @Override
+    public Task getTask(int index){
+
+        TaskNode itr = header;
+
+        int i=0;
+        while (itr.next != null && i != index) {
+            itr = itr.next;
+            i++;
         }
+        LinkedListTaskItr p = new LinkedListTaskItr(itr);
+        return p.current.task ;
+    }
+/*
+    //set in null
+    public void makeEmpty( ) {
+        header.next = null;
+    }
+
+    public static int listSize(LinkedTaskList list ) {
+        LinkedListTaskItr itr;
+        int size = 0;
+
+        for( itr = list.first(); itr.isValid(); itr.advance() )
+            size++;
+        return size;
+    }
+
+    public LinkedListTaskItr zeroth( ) {
+        return new LinkedListTaskItr( header );
     }
 
 
+
+*/
+    public LinkedListTaskItr findPrevious( Task task) {
+        TaskNode itr = header;
+        while( itr.next != null && !itr.next.task.equals( task ) )
+            itr = itr.next;
+        return new LinkedListTaskItr( itr );
+    }
+
+
+
     @Override
+    //Add to the end of the list
     public void add(Task task) {
-        if(pointer == arrTask.length-1) {
-            Task[] newArrTask = new Task[(int)(arrTask.length * CUT_RATE)];
-            System.arraycopy(arrTask, 0, newArrTask, 0, pointer);
-            arrTask = newArrTask;
+
+        //System.out.println("try add task - " + task.getTitle());
+        TaskNode itr = header;
+        while (itr.next != null) {//&& !itr.next.task.equals( task )
+            itr = itr.next;
         }
-        arrTask[pointer] = task;
-        pointer++;
+        LinkedListTaskItr p = new LinkedListTaskItr(itr);
+        p.current.next = new TaskNode( task, p.current.next );
+        size++;
+        //System.out.println("Added task " +task.getTitle());
+        //System.out.println(size);
     }
 
+
     @Override
-    public boolean remove(Task task) {
-        boolean removed = false;
-        int index = 0;                              //index of the task to be delete
-        //search for the index of the element to be deleted
-        for (int i = 0; i < pointer; i++) {
-            if (arrTask[i].equals(task)) {        //looking for the first match
-                index = i;
-                removed = true;
-                break;
-            }
+    public boolean remove( Task task) {
+        //System.out.println("remove task - " +task.getTitle());
+        LinkedListTaskItr p = findPrevious( task );
+        if( p.current.next != null ) {
+            p.current.next = p.current.next.next;  // Bypass deleted node
+            size--;
+            //System.out.println("removed task - " + task.getTitle());
+            //System.out.println(size);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //print method
+    public static void printTaskList( LinkedTaskList theList ) {
+        if( theList.isEmpty( ) )
+            System.out.print( "Empty list" );
+        else {
+            LinkedListTaskItr itr = theList.first( );
+            for( ; itr.isValid( ); itr.advance( ) )
+                System.out.println( itr.retrieve( ).getTitle());
         }
 
-        if (removed) {
-            for (int i = index; i < pointer; i++) {
-                arrTask[i] = arrTask[i + 1];
-            }
-            arrTask[pointer] = null;
-            pointer--;
-
-            if (arrTask.length > INIT_SIZE && pointer < arrTask.length / CUT_RATE) {
-                Task[] newArrTask = new Task[(int) (arrTask.length / CUT_RATE)];
-                System.arraycopy(arrTask, 0, newArrTask, 0, pointer);
-                arrTask = newArrTask;   // если элементов в CUT_RATE раз меньше чем
-                // длина массива, то уменьшу
-            }
-        }
-        return removed;
+        System.out.println( );
     }
 }
+
+//Iterator
+class LinkedListTaskItr {
+    TaskNode current;    // Current position
+
+    LinkedListTaskItr( TaskNode theNode ) {
+        current = theNode;
+    }
+
+    //true if the current position is valid
+    public boolean isValid( ) {
+        return current != null;
+    }
+
+    //Current TaskNode
+    public Task retrieve( ) {
+        return isValid( ) ? current.task : null;
+    }
+
+
+    //Next TaskNode
+    public void advance( ) {
+        if( isValid( ) )
+            current = current.next;
+    }
+}
+
+//Node class
+class TaskNode {
+    public Task task;
+    public TaskNode next;
+
+    // Constructors
+    public TaskNode(Task task) {
+        this(task, null);
+    }
+
+    public TaskNode(Task task, TaskNode n) {
+        this.task = task;
+        this.next = n;
+    }
+}
+
