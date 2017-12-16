@@ -6,7 +6,7 @@ package ua.sumdu.j2se.Pechenyuk.tasks;
  * @author Sergey Pechenyuk
  */
 
-public class Task {
+public class Task implements Cloneable {
     private String title;
     private int time;
     private int start;
@@ -25,6 +25,26 @@ public class Task {
         this.setTime(start, end, interval);
         this.active = false;
         this.title = title;
+    }
+
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Task object1 = new Task("sss", 5);
+        object1.setActive(true);
+        //System.out.println(object1.nextTimeAfter(5));
+        Task zzz = object1.clone();
+        System.out.println(object1.equals(zzz));
+        zzz.setTitle("qaz");
+        zzz.setTime(5,15,2);
+        System.out.println(object1.toString());
+        System.out.println();
+        System.out.println(zzz.toString());
+        System.out.println();
+        System.out.println(object1.equals(zzz));
+
+        Task gim = new Task("go to the gim", 1, 150, 15);
+        gim.setActive(true);
+        //gim.interval=0;
+        //System.out.println(gim.nextTimeAfter(8));
     }
 
      public void setTitle(String title) {
@@ -65,7 +85,6 @@ public class Task {
             }
             this.time = time;
         }
-
     }
 
     public int getStartTime() {
@@ -158,4 +177,37 @@ public class Task {
                 }
             }
      }
+
+
+    @Override
+    public String toString(){
+        if (isRepeated())
+            return "Repeated Task '"+getTitle()+"', started from "+getStartTime()+" to "+getEndTime()+" every "+getRepeatInterval()+ ". Active is " + isActive() + "\n" ;
+        else
+            return "Not repeated Task '"+getTitle()+ "' started at "+getTime() + ". Active is " + isActive() + "\n";
+    }
+
+    public Task clone() throws CloneNotSupportedException {
+             Task copy =(Task)super.clone();
+            return copy;
+    }
+
+    @Override
+    public boolean equals (Object obj){
+        if ((obj == null ) || !obj.getClass().equals(getClass())){
+            return false;
+        }
+        Task task = (Task) obj;
+        return (task.hashCode() == hashCode()) &&
+                (task.getTitle() == getTitle()) &&
+                (task.getStartTime() == getStartTime()) &&
+                (task.getEndTime() == getEndTime()) &&
+                (task.getRepeatInterval() == getRepeatInterval()) &&
+                (task.isActive() == isActive());
+    }
+
+    public int hashCode(){
+        int hash = getTitle().hashCode() +  getStartTime() + getEndTime() + 3 * getRepeatInterval();
+        return hash;
+    }
 }
