@@ -85,12 +85,9 @@ public class LinkedTaskList extends TaskList{
         if( this.isEmpty() )
             System.out.print( "Empty list" );
         else {
-
             Iterator<Task> t = iterator();
             while (t.hasNext())
-            {
                 System.out.println(t.next().getTitle());
-            }
 
             /*
             Node t = this.header;
@@ -100,7 +97,6 @@ public class LinkedTaskList extends TaskList{
             }
             */
         }
-        System.out.println( );
     }
 
 
@@ -149,13 +145,7 @@ public class LinkedTaskList extends TaskList{
         try {
             LinkedTaskList copy =(LinkedTaskList)super.clone();
             copy.header = copy.header.clone();
-            /*Node t = this.header;
-            while (t.getNext()!= null) {
-                copy.header.setItem(t.getItem().clone());
-                //System.out.println(t.getNext().getItem().getTitle());
-                t = t.getNext();
-            }
-*/
+
             return copy;
         }
         catch (CloneNotSupportedException e){
@@ -180,20 +170,13 @@ public class LinkedTaskList extends TaskList{
                 f = f.getNext();
                 s = s.getNext();
             }
-            /*
-            Iterator first = this.iterator();
-            Iterator second = list.iterator();
-            while(first.hasNext()){
-                if (!second.next().equals(first.next()))
-                    return false;
-            }
-            */
             return true;
-        }
-        else
+        }  else {
             return false;
+        }
     }
 
+    @Override
     public int hashCode(){
         int listHash = 0;
 
@@ -203,6 +186,20 @@ public class LinkedTaskList extends TaskList{
             t = t.getNext();
         }
         return listHash;
+    }
+
+    @Override
+    public String toString(){
+        String a = "LinkedTaskList \n";
+        if( this.isEmpty() )
+            System.out.print( "Empty list" );
+        else {
+            Iterator<Task> t = iterator();
+            while (t.hasNext())
+               a = a + t.next().toString() + "\n";
+        }
+        System.out.println(a);
+        return a;
     }
 }
 

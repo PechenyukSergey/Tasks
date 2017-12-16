@@ -55,9 +55,8 @@ public class ArrayTaskList extends TaskList{
             listTask[size] = null;
             size--;
 
-            if (listTask.length > INIT_SIZE && size < listTask.length / CUT_RATE) {
+            if (listTask.length > INIT_SIZE && size < listTask.length / CUT_RATE)
                 resize ((int) ((listTask.length / CUT_RATE) + 1));
-            }
         }
         return removed;
     }
@@ -122,11 +121,11 @@ public class ArrayTaskList extends TaskList{
 
 
     public boolean equals (Object obj){
-        if ((obj == null ) || !obj.getClass().equals(getClass())){
+        if ((obj == null ) || !obj.getClass().equals(getClass()))
             return false;
-        }
+
         ArrayTaskList arr = (ArrayTaskList) obj;
-        if (arr==(obj)){
+        if (arr == (obj)){
             Iterator first = this.iterator();
             Iterator second = arr.iterator();
             while(first.hasNext()){
@@ -134,9 +133,9 @@ public class ArrayTaskList extends TaskList{
                     return false;
             }
             return true;
-        }
-        else
+        } else {
             return false;
+        }
     }
 
     public int hashCode(){
@@ -147,11 +146,7 @@ public class ArrayTaskList extends TaskList{
         while (t.hasNext()){
             k = t.next();
             ArrayHash += k.hashCode();
-            //System.out.println(k.hashCode());
-            //System.out.println(k.getTitle());
         }
-
         return ArrayHash;
     }
-
 }

@@ -2,6 +2,7 @@ package ua.sumdu.j2se.Pechenyuk.tasks;
 
 
 public class Main {
+   /*
     public static void main(String[] args) throws InstantiationException, IllegalAccessException, CloneNotSupportedException {
 
         Task one = new Task("Repeat left intersect IN 1", 0, 55, 13);
@@ -88,4 +89,5 @@ public class Main {
         //System.out.println(qqq.first().current.next.next.task.getTitle());
 
     }
-}
+
+//}
