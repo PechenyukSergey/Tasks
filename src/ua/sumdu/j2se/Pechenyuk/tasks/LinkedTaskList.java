@@ -6,67 +6,31 @@ package ua.sumdu.j2se.Pechenyuk.tasks;
 public class LinkedTaskList extends TaskList{
 
     private TaskNode header;
-
+    private TaskNode first;
+    private TaskNode end;
     private int size = 0;
+
 
     //Constractor
     public LinkedTaskList( ) {
         header = new TaskNode( null );
+        first = new TaskNode( null );
+        end = new TaskNode( null );
     }
 
     public int size() {
         return size;
     }
 
-    //is null
-    public boolean isEmpty( ) {
-        return header.next == null;
-    }
-
-    public LinkedListTaskItr first( ) {
-        return new LinkedListTaskItr( header.next );
-    }
-
     @Override
     public Task getTask(int index){
-
         TaskNode itr = header;
-
         int i=0;
         while (itr.next != null && i != index) {
             itr = itr.next;
             i++;
         }
-        LinkedListTaskItr p = new LinkedListTaskItr(itr);
-        return p.current.task ;
-    }
-/*
-    //set in null
-    public void makeEmpty( ) {
-        header.next = null;
-    }
-
-    public static int listSize(LinkedTaskList list ) {
-        LinkedListTaskItr itr;
-        int size = 0;
-
-        for( itr = list.first(); itr.isValid(); itr.advance() )
-            size++;
-        return size;
-    }
-
-    public LinkedListTaskItr zeroth( ) {
-        return new LinkedListTaskItr( header );
-    }
-
-
-
-*/
-    public LinkedListTaskItr findPrevious( Task task) {
-        TaskNode itr = header;
-        while( itr.next != null && !itr.next.task.equals( task ) )
-            itr = itr.next;
-        return new LinkedListTaskItr( itr );
+        return itr.task ;
     }
 
 
@@ -74,72 +38,58 @@ public class LinkedTaskList extends TaskList{
     @Override
     //Add to the end of the list
     public void add(Task task) {
+        TaskNode taskNode = new TaskNode(task);
 
-        //System.out.println("try add task - " + task.getTitle());
-        TaskNode itr = header;
-        while (itr.next != null) {//&& !itr.next.task.equals( task )
-            itr = itr.next;
-        }
-        LinkedListTaskItr p = new LinkedListTaskItr(itr);
-        p.current.next = new TaskNode( task, p.current.next );
-        size++;
-        //System.out.println("Added task " +task.getTitle());
-        //System.out.println(size);
-    }
-
-
-    @Override
-    public boolean remove( Task task) {
-        //System.out.println("remove task - " +task.getTitle());
-        LinkedListTaskItr p = findPrevious( task );
-        if( p.current.next != null ) {
-            p.current.next = p.current.next.next;  // Bypass deleted node
-            size--;
-            //System.out.println("removed task - " + task.getTitle());
-            //System.out.println(size);
-            return true;
+        if(header.task == null && header.next == null) {
+            header = taskNode;
+            end = taskNode;
+            System.out.println("added first node");
+            System.out.println(header.next);
         } else {
-            return false;
+            end.next = taskNode;
+            end = taskNode;
+            System.out.println("added node");
         }
+        size++;
     }
 
-    //print method
-    public static void printTaskList( LinkedTaskList theList ) {
-        if( theList.isEmpty( ) )
-            System.out.print( "Empty list" );
-        else {
-            LinkedListTaskItr itr = theList.first( );
-            for( ; itr.isValid( ); itr.advance( ) )
-                System.out.println( itr.retrieve( ).getTitle());
+
+@Override
+    public boolean remove( Task task) {
+        boolean removed = false;
+        TaskNode current = header;
+        if (header.task.equals(task)) {
+            if (header.next != null) {
+                header = header.next;
+                size--;
+                System.out.println("REMOVED header node");
+            } else {
+                header = null;
+                end = null;
+            }
+            return true;
         }
-
-        System.out.println( );
-    }
-}
-
-//Iterator
-class LinkedListTaskItr {
-    TaskNode current;    // Current position
-
-    LinkedListTaskItr( TaskNode theNode ) {
-        current = theNode;
-    }
-
-    //true if the current position is valid
-    public boolean isValid( ) {
-        return current != null;
-    }
-
-    //Current TaskNode
-    public Task retrieve( ) {
-        return isValid( ) ? current.task : null;
-    }
-
-
-    //Next TaskNode
-    public void advance( ) {
-        if( isValid( ) )
+        while (current.next != null && !current.next.task.equals(task)) {
             current = current.next;
+        }
+        
+        if(current.next == null){
+            System.out.println("not found");
+            return false;
+        } else {
+            if (current.next.equals(end)) {
+                current.next = null;
+                end = current;
+                size--;
+                System.out.println("removed end node");
+                return true;
+            } else {
+                current.next = current.next.next;
+                System.out.println("removed middle node");
+                size--;
+                return true;
+            }
+        }
     }
 }
 
@@ -148,7 +98,7 @@ class TaskNode {
     public Task task;
     public TaskNode next;
 
-    // Constructors
+    // Constructor
     public TaskNode(Task task) {
         this(task, null);
     }

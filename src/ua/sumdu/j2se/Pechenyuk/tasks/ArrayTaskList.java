@@ -5,31 +5,24 @@ package ua.sumdu.j2se.Pechenyuk.tasks;
  * @version 1.01 15 Oct 2
  * @author Sergey Pechenyuk
  */
-public class ArrayTaskList extends TaskList{
+public class ArrayTaskList {
 
     private final int INIT_SIZE = 4;
     private final float CUT_RATE = 2.0f;
     private int size = 0;
-    private Task[] arrTask;
 
-    ArrayTaskList(){
-        arrTask = new Task[INIT_SIZE];
-     }
+    private Task[] arrTask = new Task[INIT_SIZE];
 
-
-    @Override
-     public Task getTask(int index) {
-        return arrTask[index];
-    }
 
     public int size() {
         return size;
     }
 
+    public Task getTask(int index) {
+        return arrTask[index];
+    }
 
-    @Override
     public void add(Task task) {
-
         if(size == arrTask.length-1) {
             resize ((int) (arrTask.length * CUT_RATE));
         }
@@ -37,7 +30,6 @@ public class ArrayTaskList extends TaskList{
         size++;
     }
 
-    @Override
     public boolean remove(Task task) {
         boolean removed = false;
         int index = 0;                              //index of the task to be delete
@@ -58,7 +50,7 @@ public class ArrayTaskList extends TaskList{
             size--;
 
             if (arrTask.length > INIT_SIZE && size < arrTask.length / CUT_RATE) {
-                resize ((int) ((arrTask.length / CUT_RATE) + 1));
+                resize ((int) ((arrTask.length / CUT_RATE) +1));
             }
         }
         return removed;
@@ -71,20 +63,6 @@ public class ArrayTaskList extends TaskList{
                     && listItem.nextTimeAfter(from) <= to) {
                 incoming.add(listItem);
             }
-
-            /*
-            if (listItem != null && listItem.isActive()) {
-                if (listItem.isRepeated()) {
-                    if (listItem.nextTimeAfter(from) != -1 && listItem.nextTimeAfter(from) <= to) {
-                        incoming.add(listItem);
-                    }
-                } else {
-                    if (listItem.getTime() > from && listItem.getTime() <= to) {
-                        incoming.add(listItem);
-                    }
-                }
-            }
-            */
         }
         return incoming;
     }
@@ -96,17 +74,7 @@ public class ArrayTaskList extends TaskList{
         //for (int i = 0; i < arrTask.length; i++) {
         //    newArrTask[i] = arrTask[i];
         //}
-        arrTask = newArrTask;      // если элементов в CUT_RATE раз меньше чем
-                                // длина массива, то уменьшу
-    }
-
-    public static void printTaskList (ArrayTaskList arr) {
-        for (int i = 0; i < arr.size; i++) {
-            if (arr.getTask(i) != null) {
-                System.out.println("title -" + arr.getTask(i).getTitle() + " - " + i);
-            } else {
-                break;
-            }
-        }
+        arrTask = newArrTask;
     }
 }
+

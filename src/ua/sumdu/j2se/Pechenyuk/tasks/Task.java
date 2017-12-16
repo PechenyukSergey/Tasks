@@ -27,17 +27,6 @@ public class Task {
         this.title = title;
     }
 
-    public static void main(String[] args) {
-        Task object1 = new Task("sss", 5);
-        object1.setActive(true);
-        System.out.println(object1.nextTimeAfter(5));
-
-        Task gim = new Task("go to the gim", 1, 150, 15);
-        gim.setActive(true);
-        //gim.interval=0;
-        System.out.println(gim.nextTimeAfter(8));
-    }
-
      public void setTitle(String title) {
          if (title.equals(null)) {
              throw new IllegalArgumentException("Wrong title!!!! ");
