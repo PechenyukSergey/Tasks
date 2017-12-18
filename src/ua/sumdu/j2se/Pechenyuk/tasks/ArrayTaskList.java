@@ -24,7 +24,7 @@ public class ArrayTaskList extends TaskList{
     }
 
     @Override
-     public Task getTask(int index) { return listTask[index]; }
+    public Task getTask(int index) { return listTask[index]; }
 
     @Override
     public void add(Task task) {

@@ -88,14 +88,6 @@ public class LinkedTaskList extends TaskList{
             Iterator<Task> t = iterator();
             while (t.hasNext())
                 System.out.println(t.next().getTitle());
-
-            /*
-            Node t = this.header;
-            while (t.getNext()!= null) {
-                System.out.println(t.getNext().getItem().getTitle());
-                t = t.getNext();
-            }
-            */
         }
     }
 

@@ -1,6 +1,7 @@
 package ua.sumdu.j2se.Pechenyuk.tasks;
 
 import java.util.Date;
+import java.io.*;
 
 /**
  * Class Task.
@@ -9,7 +10,7 @@ import java.util.Date;
  * @author Sergey Pechenyuk
  */
 
-public class Task implements Cloneable {
+public class Task implements Serializable, Cloneable {
     private String title;
     private Date time;
     private Date start;
@@ -58,11 +59,11 @@ public class Task implements Cloneable {
     }
 
 
-     public void setTitle(String title) {
-         if (title.equals(null)) {
-             throw new IllegalArgumentException("Wrong title!!!! ");
-         }
-         this.title = title;
+    public void setTitle(String title) {
+        if (title.equals(null)) {
+            throw new IllegalArgumentException("Wrong title!!!! ");
+        }
+        this.title = title;
     }
 
     public String getTitle() {
@@ -124,10 +125,10 @@ public class Task implements Cloneable {
 
     public void setInterval(int interval) {
         if (isRepeated()) {
-            if (interval <= 0) {
+            if (interval < 0) {
                 throw new ArithmeticException("interval must be more than 0");
-            //task with interval>end-start is not repeated task. Its done one, at start.
-            //} else if (interval >= (this.end - this.start)) {
+                //task with interval>end-start is not repeated task. Its done one, at start.
+                //} else if (interval >= (this.end - this.start)) {
                 //throw new ArithmeticException("interval must be less than end-start");
             } else {
                 this.interval = interval;
@@ -141,7 +142,7 @@ public class Task implements Cloneable {
         if (start == null) {
             throw new ArithmeticException("start must be pozitive");
         }
-        if (end.compareTo(start) <= 0) {
+        if (end.compareTo(start) < 0) {
             throw new ArithmeticException("end must be more than start");
         }
 
@@ -163,7 +164,7 @@ public class Task implements Cloneable {
             throw new ArithmeticException("current must be pozitive");
 
         if (!isActive())
-                return null;                          //not Active
+            return null;                          //not Active
 
         if (!isRepeated()) {                 //not Repeated
             if (current.compareTo(time) == -1) {
@@ -196,8 +197,8 @@ public class Task implements Cloneable {
     }
 
     public Task clone() throws CloneNotSupportedException {
-             Task copy =(Task)super.clone();
-            return copy;
+        Task copy =(Task)super.clone();
+        return copy;
     }
 
     @Override
